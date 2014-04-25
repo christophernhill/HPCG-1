@@ -1,8 +1,11 @@
+
 # High Performance Conjugate Gradient Benchmark (HPCG)
 
-:Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
-:Revision: 2.1
-:Date: January 31, 2014
+Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
+
+Revision: 2.1
+
+Date: January 31, 2014
 
 
 ## Introduction
