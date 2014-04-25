@@ -35,7 +35,8 @@
        - No other assumptions are made about entry ordering.
 
   Symmetric Gauss-Seidel notes:
-  - We use the input vector x as the RHS and start with an initial guess for y of all zeros.
+  - We use the input vector r as the RHS.
+  - We use the initial content of x as the initial guess.
   - We perform one forward sweep.  x should be initially zero on the first GS sweep, but we do not attempt to exploit this fact.
   - We then perform one back sweep.
   - For simplicity we include the diagonal contribution in the for-j loop, then correct the sum after
