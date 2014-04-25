@@ -23,6 +23,9 @@
 #include <cassert>
 #include <cstdlib>
 #include "Geometry.hpp"
+#include "chkcudaerror.hpp"
+
+#include "VectorOptimizationDataTx.hpp"
 
 struct Vector_STRUCT {
   local_int_t localLength;  //!< length of local portion of the vector
@@ -45,7 +48,11 @@ typedef struct Vector_STRUCT Vector;
 inline void InitializeVector(Vector & v, local_int_t localLength) {
   v.localLength = localLength;
   v.values = new double[localLength];
-  v.optimizationData = 0;
+  VectorOptimizationDataTx* optimizationData = new VectorOptimizationDataTx;
+  cudaError_t err = cudaMalloc((void**)&optimizationData->devicePtr,
+      v.localLength * sizeof(double));
+  CHKCUDAERR(err);
+  v.optimizationData = optimizationData;
   return;
 }
 
@@ -58,6 +65,9 @@ inline void ZeroVector(Vector & v) {
   local_int_t localLength = v.localLength;
   double * vv = v.values;
   for (int i=0; i<localLength; ++i) vv[i] = 0.0;
+  VectorOptimizationDataTx* optimizationData =
+      (VectorOptimizationDataTx*)v.optimizationData;
+  optimizationData->ZeroVector(localLength);
   return;
 }
 /*!
@@ -108,6 +118,11 @@ inline void DeleteVector(Vector & v) {
 
   delete [] v.values;
   v.localLength = 0;
+  VectorOptimizationDataTx* optimizationData =
+      (VectorOptimizationDataTx*)v.optimizationData;
+  cudaError_t err = cudaFree(optimizationData->devicePtr);
+  CHKCUDAERR(err);
+  delete optimizationData;
   return;
 }
 
