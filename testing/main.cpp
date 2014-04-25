@@ -83,11 +83,6 @@ int main(int argc, char * argv[]) {
 #ifdef HPCG_DETAILED_DEBUG
   if (size < 100 && rank==0) HPCG_fout << "Process "<<rank<<" of "<<size<<" is alive with " << params.numThreads << " threads." <<endl;
 
-  if (rank==0) {
-    char c;
-    std::cout << "Press key to continue"<< std::endl;
-    std::cin.get(c);
-  }
 #ifndef HPCG_NOMPI
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
@@ -140,7 +135,7 @@ int main(int argc, char * argv[]) {
 #endif
 
 #ifdef HPCG_DETAILED_DEBUG
-  if (geom.size==1) WriteProblem(A, b, x, xexact);
+  if (geom->size==1) WriteProblem(*geom, A, b.values, x.values, xexact.values);
 #endif
 
 
@@ -315,7 +310,7 @@ int main(int argc, char * argv[]) {
   // All processors are needed here.
 #ifdef HPCG_DEBUG
   double residual = 0;
-  ierr = ComputeResidual(A.localNumberOfRows, x, xexact, &residual);
+  ierr = ComputeResidual(A.localNumberOfRows, x, xexact, residual);
   if (ierr) HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
   if (rank==0) HPCG_fout << "Difference between computed and exact  = " << residual << ".\n" << endl;
 #endif
