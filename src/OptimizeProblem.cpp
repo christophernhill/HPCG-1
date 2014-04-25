@@ -19,6 +19,16 @@
  */
 
 #include "OptimizeProblem.hpp"
+
+#include "MatrixOptimizationDataTx.hpp"
+#include "VectorOptimizationDataTx.hpp"
+#include <cusparse_v2.h>
+#include <cuda_runtime.h>
+#include "chkcudaerror.hpp"
+
+cusparseStatus_t setUpLocalMatrixOnGPU(SparseMatrix& A);
+cusparseStatus_t initializeCusparse(SparseMatrix& A);
+
 /*!
   Optimizes the data structures used for CG iteration to increase the
   performance of the benchmark version of the preconditioned CG algorithm.
@@ -34,10 +44,16 @@
   @see GenerateGeometry
   @see GenerateProblem
 */
-int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vector & xexact) {
-
-// This function can be used to completely transform any part of the data structures.
-// Right now it does nothing, so compiling with a check for unused variables results in complaints
-
-  return(0);
+int OptimizeProblem(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
+                            Vector &xexact) {
+  int err = 0;
+  SparseMatrix* m = &A;
+  while (m) {
+    MatrixOptimizationDataTx *optimizationData = new MatrixOptimizationDataTx;
+    err = optimizationData->setupLocalMatrixOnGPU(*m);
+    m->optimizationData = optimizationData;
+    m = m->Ac;
+  }
+  return err;
 }
+
