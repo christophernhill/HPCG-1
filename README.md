@@ -1,11 +1,11 @@
-
 # High Performance Conjugate Gradient Benchmark (HPCG)
 
-Author: Jack Dongarra and Michael Heroux and Piotr Luszczek
+This repository contains the Tech-X modifications of the HPCG benchmark.
+HPCG is developed by Jack Dongarra, Michael Heroux, and Piotr Luszczek.
+For more information on HPCG see 
+[the official website of HPCG](https://software.sandia.gov/hpcg/default.php)
 
-Revision: 2.1
-
-Date: January 31, 2014
+This repository is based on revision 2.1 of HPCG.
 
 
 ## Introduction
@@ -25,7 +25,7 @@ These various modes are required in order to address sufficiently big
 problems if the range of indexing goes above 2^31 (roughly 2.1B), or to
 conserve storage costs if the range of indexing is less than 2^31.
 
-The  HPCG  software  package requires the availibility on your system of
+The  HPCG  software  package requires the availability on your system of
 an implementation of the  Message Passing Interface (MPI). An
 implementation compliant with MPI version 1.1 is sufficient.
 
