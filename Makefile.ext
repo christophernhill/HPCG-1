@@ -26,14 +26,11 @@ HPCG_DEPS = src/CG.o \
 	    src/ComputeDotProduct.o \
 	    src/ComputeDotProduct_ref.o \
 	    src/mytimer.o \
-	    src/ComputeSPMV.o \
 	    src/ComputeSPMV_ref.o \
-	    src/ComputeSYMGS.o \
 	    src/ComputeSYMGS_ref.o \
 	    src/ComputeWAXPBY.o \
 	    src/ComputeWAXPBY_ref.o \
 	    src/ComputeMG_ref.o \
-	    src/ComputeMG.o \
 	    src/ComputeProlongation_ref.o \
 	    src/ComputeRestriction_ref.o \
 	    src/GenerateCoarseProblem.o \
