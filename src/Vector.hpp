@@ -105,6 +105,11 @@ inline void CopyVector(const Vector & v, Vector & w) {
   double * vv = v.values;
   double * wv = w.values;
   for (int i=0; i<localLength; ++i) wv[i] = vv[i];
+  double * v_d = ((VectorOptimizationDataTx*)v.optimizationData)->devicePtr;
+  double * w_d = ((VectorOptimizationDataTx*)w.optimizationData)->devicePtr; 
+  cudaError_t err = cudaMemcpy(w_d, v_d, localLength * sizeof(double), 
+      cudaMemcpyDeviceToDevice);
+  CHKCUDAERR(err);
   return;
 }
 
