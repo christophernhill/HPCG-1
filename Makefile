@@ -1,7 +1,7 @@
 # -*- Makefile -*-
 
-#arch = setup/Make.MPI_GCC_OMP_GELUS
-setup_file = setup/Make.MPI_GCC_OMP_GELUS
+#arch = setup/Make.Titan_GCC_OMP_GELUS
+setup_file = setup/Make.Titan_GCC_OMP_GELUS
 
 #include setup/Make.$(arch)
 include $(setup_file)
@@ -23,12 +23,10 @@ HPCG_DEPS = src/CG.o \
 	    src/WriteProblem.o \
 	    src/YAML_Doc.o \
 	    src/YAML_Element.o \
-	    src/ComputeDotProduct.o \
 	    src/ComputeDotProduct_ref.o \
 	    src/mytimer.o \
 	    src/ComputeSPMV_ref.o \
 	    src/ComputeSYMGS_ref.o \
-	    src/ComputeWAXPBY.o \
 	    src/ComputeWAXPBY_ref.o \
 	    src/ComputeMG_ref.o \
 	    src/ComputeProlongation_ref.o \
@@ -98,9 +96,6 @@ src/YAML_Doc.o: ./src/YAML_Doc.cpp
 src/YAML_Element.o: ./src/YAML_Element.cpp
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
-src/ComputeDotProduct.o: ./src/ComputeDotProduct.cpp
-	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
-
 src/ComputeDotProduct_ref.o: ./src/ComputeDotProduct_ref.cpp
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
@@ -113,28 +108,16 @@ src/init.o: ./src/init.cpp
 src/mytimer.o: ./src/mytimer.cpp
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
-src/ComputeSPMV.o: ./src/ComputeSPMV.cpp
-	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
-
 src/ComputeSPMV_ref.o: ./src/ComputeSPMV_ref.cpp
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
-src/ComputeSYMGS.o: ./src/ComputeSYMGS.cpp
-	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
-
 src/ComputeSYMGS_ref.o: ./src/ComputeSYMGS_ref.cpp
-	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
-
-src/ComputeWAXPBY.o: ./src/ComputeWAXPBY.cpp
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
 src/ComputeWAXPBY_ref.o: ./src/ComputeWAXPBY_ref.cpp
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
 src/ComputeMG_ref.o: ./src/ComputeMG_ref.cpp
-	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
-
-src/ComputeMG.o: ./src/ComputeMG.cpp
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
 src/ComputeProlongation_ref.o: ./src/ComputeProlongation_ref.cpp
