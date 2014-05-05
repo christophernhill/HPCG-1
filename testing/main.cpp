@@ -59,6 +59,12 @@ using std::endl;
 #include "TestSymmetry.hpp"
 #include "TestNorms.hpp"
 
+#ifdef CUDA_PROFILING
+#ifndef CUDA_PROFILING_INTERVAL
+#define CUDA_PROFILING_INTERVAL 10
+#endif
+#include <cuda_profiler_api.h>
+#endif
 /*!
   Main driver program: Construct synthetic problem, run V&V tests, compute benchmark parameters, run benchmark, report results.
 
@@ -298,12 +304,22 @@ int main(int argc, char * argv[]) {
   testnorms_data.values = new double[numberOfCgSets];
 
   for (int i=0; i< numberOfCgSets; ++i) {
+#ifdef CUDA_PROFILING
+  if (i % CUDA_PROFILING_INTERVAL == 0) {
+    cudaProfilerStart();
+  }
+#endif
     ZeroVector(x); // Zero out x
     ierr = CG( A, data, b, x, optMaxIters, optTolerance, niters, normr, normr0, &times[0], true);
     if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
     testnorms_data.values[i] = normr/normr0; // Record scaled residual from this run
     totalNiters += niters;
+#ifdef CUDA_PROFILING
+  if (i % CUDA_PROFILING_INTERVAL == 0) {
+    cudaProfilerStop();
+  }
+#endif
   }
 
   // Compute difference between known exact solution and computed solution
