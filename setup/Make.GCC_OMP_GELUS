@@ -92,7 +92,7 @@ MPlib        =
 # ----------------------------------------------------------------------
 #
 HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) $(MPinc) -I/usr/local/cuda/include -I/scr_ivy/dmeiser/PTSOLVE/gelus/include
-HPCG_LIBS     = -L/usr/local/cuda/lib64 -lcuda -lcusparse -L/scr_ivy/dmeiser/PTSOLVE/gelus/lib/ -lgelus
+HPCG_LIBS     = -L/usr/local/cuda/lib64 -lcuda -lcusparse -L/scr_ivy/dmeiser/PTSOLVE/gelus/lib/ -lcugelus -lgelusbase
 #
 # - Compile time options -----------------------------------------------
 #

@@ -31,6 +31,7 @@
 #include "ComputeDotProduct.hpp"
 #include "ComputeWAXPBY.hpp"
 
+#include <TxVectorOptimizationDataBase.hpp>
 
 // Use TICK and TOCK to time a code section in MATLAB-like fashion
 #define TICK()  t0 = mytimer() //!< record current time in 't0'
@@ -75,12 +76,12 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
   Vector & p = data.p; // Direction vector (in MPI mode ncol>=nrow)
   Vector & Ap = data.Ap;
 
-  transferDataToGPU(x);
-  transferDataToGPU(b);
-  transferDataToGPU(r);
-  transferDataToGPU(z);
-  transferDataToGPU(p);
-  transferDataToGPU(Ap);
+  ((TxVectorOptimizationDataBase*)x.optimizationData)->transferDataToDevice(x);
+  ((TxVectorOptimizationDataBase*)b.optimizationData)->transferDataToDevice(b);
+  ((TxVectorOptimizationDataBase*)r.optimizationData)->transferDataToDevice(r);
+  ((TxVectorOptimizationDataBase*)z.optimizationData)->transferDataToDevice(z);
+  ((TxVectorOptimizationDataBase*)p.optimizationData)->transferDataToDevice(p);
+  ((TxVectorOptimizationDataBase*)Ap.optimizationData)->transferDataToDevice(Ap);
 
   if (!doPreconditioning && A.geom->rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << std::endl;
 
@@ -136,7 +137,7 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     niters = k;
   }
 
-  transferDataFromGPU(x);
+  ((TxVectorOptimizationDataBase*)x.optimizationData)->transferDataFromDevice(x);
 
   // Store times
   times[1] += t1; // dot-product time

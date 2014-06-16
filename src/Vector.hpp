@@ -23,9 +23,10 @@
 #include <cassert>
 #include <cstdlib>
 #include "Geometry.hpp"
-#include "chkcudaerror.hpp"
 
-#include "VectorOptimizationDataTx.hpp"
+#include <TxVectorOptimizationDataBase.hpp>
+#include <TxHPCG_config.h>
+#include <BackendFactory.hpp>
 
 struct Vector_STRUCT {
   local_int_t localLength;  //!< length of local portion of the vector
@@ -48,10 +49,9 @@ typedef struct Vector_STRUCT Vector;
 inline void InitializeVector(Vector & v, local_int_t localLength) {
   v.localLength = localLength;
   v.values = new double[localLength];
-  VectorOptimizationDataTx* optimizationData = new VectorOptimizationDataTx;
-  cudaError_t err = cudaMalloc((void**)&optimizationData->devicePtr,
-      v.localLength * sizeof(double));
-  CHKCUDAERR(err);
+  TxVectorOptimizationDataBase* optimizationData =
+    getVectorOptimizationData(OPTIMIZED_BACKEND_NAME);
+  optimizationData->allocateResources(localLength);
   v.optimizationData = optimizationData;
   return;
 }
@@ -65,8 +65,8 @@ inline void ZeroVector(Vector & v) {
   local_int_t localLength = v.localLength;
   double * vv = v.values;
   for (int i=0; i<localLength; ++i) vv[i] = 0.0;
-  VectorOptimizationDataTx* optimizationData =
-      (VectorOptimizationDataTx*)v.optimizationData;
+  TxVectorOptimizationDataBase* optimizationData =
+      (TxVectorOptimizationDataBase*)v.optimizationData;
   optimizationData->ZeroVector(localLength);
   return;
 }
@@ -105,12 +105,10 @@ inline void CopyVector(const Vector & v, Vector & w) {
   double * vv = v.values;
   double * wv = w.values;
   for (int i=0; i<localLength; ++i) wv[i] = vv[i];
-  double * v_d = ((VectorOptimizationDataTx*)v.optimizationData)->devicePtr;
-  double * w_d = ((VectorOptimizationDataTx*)w.optimizationData)->devicePtr; 
-  cudaError_t err = cudaMemcpy(w_d, v_d, localLength * sizeof(double), 
-      cudaMemcpyDeviceToDevice);
-  CHKCUDAERR(err);
-  return;
+  TxVectorOptimizationDataBase* optimizationData =
+      (TxVectorOptimizationDataBase*)v.optimizationData;
+  void* w_d = ((TxVectorOptimizationDataBase*)w.optimizationData)->getDevicePtr(); 
+  optimizationData->copyDeviceData(w_d, localLength);
 }
 
 
@@ -123,10 +121,8 @@ inline void DeleteVector(Vector & v) {
 
   delete [] v.values;
   v.localLength = 0;
-  VectorOptimizationDataTx* optimizationData =
-      (VectorOptimizationDataTx*)v.optimizationData;
-  cudaError_t err = cudaFree(optimizationData->devicePtr);
-  CHKCUDAERR(err);
+  TxVectorOptimizationDataBase* optimizationData =
+      (TxVectorOptimizationDataBase*)v.optimizationData;
   delete optimizationData;
   return;
 }
