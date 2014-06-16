@@ -92,7 +92,7 @@ MPlib        = -L$(MPdir)/lib -lmpi_cxx -lmpi
 # ----------------------------------------------------------------------
 #
 HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) $(MPinc) -I/usr/local/cuda/include -I/scr_ivy/dmeiser/PTSOLVE/gelus/include -I/scr_ivy/dmeiser/PTSOLVE/TxHPCG/include
-HPCG_LIBS     = -L/usr/local/cuda/lib64 -lcuda -lcusparse -L/scr_ivy/dmeiser/PTSOLVE/gelus/lib/ -lcugelus -lgelusbase $(MPlib) -L/scr_ivy/dmeiser/PTSOLVE/TxHPCG/lib/ -lTxHPCG -lCUTxHPCG
+HPCG_LIBS     = -L/usr/local/cuda/lib64 -L/scr_ivy/dmeiser/PTSOLVE/gelus/lib/ $(MPlib) -L/scr_ivy/dmeiser/PTSOLVE/TxHPCG/lib/ -lTxHPCG -lCUTxHPCG -lcugelus -lgelusbase -lcuda -lcusparse -lcudart
 #
 # - Compile time options -----------------------------------------------
 #
