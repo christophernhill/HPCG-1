@@ -35,7 +35,8 @@ using std::endl;
 #include "TestCG.hpp"
 #include "CG.hpp"
 
-#include "TxMatrixOptimizationDataBase.hpp"
+#include <TxHPCG_config.h>
+#include <TxMatrixOptimizationDataBase.hpp>
 
 /*!
   Test the correctness of the Preconditined CG implementation by using a system matrix with a dominant diagonal.
@@ -80,7 +81,8 @@ int TestCG(SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData &
   }
   ReplaceMatrixDiagonal(A, exaggeratedDiagA);
   void* stashedOptimizationData = A.optimizationData;
-  TxMatrixOptimizationDataBase* tmpOptData;
+  TxMatrixOptimizationDataBase* tmpOptData = 
+    getMatrixOptimizationData(OPTIMIZED_BACKEND_NAME);
   tmpOptData->ingestLocalMatrix(A);
   A.optimizationData = tmpOptData;
 
